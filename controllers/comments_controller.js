@@ -44,23 +44,34 @@ exports.create = (req, res) => {
     var newComment = new Comment(Object.assign({codigo: req.params.codigo}, req.body));
     
     //In case of invalid document code, we reject the request
-    if(newComment.codigo == undefined || newComment.comment == undefined || newComment.author == undefined){
-        console.log('incorrect params');
-        res.status(400).json({error: 'incorrect params'});
-        return;        
-    }
+    const invalid = newComment.validateSync();
+    if(invalid){
+        const validationErrors = [];
+        if(invalid.errors.author != undefined) validationErrors.push(invalid.errors.author.message);
+        if(invalid.errors.comment != undefined) validationErrors.push(invalid.errors.comment.message);
+        
+        console.log(validationErrors);
+        res.status(400).json({errors: validationErrors});       
+    } else{
+        newComment.save((err, result) => {
+            if (err) return console.log(err);
+            console.log('saved comment to database');
+        });
     
-    newComment.save((err, result) => {
-        if (err) return console.log(err);
-        console.log('saved comment to database');
-    });
-
-    res.json(newComment);
+        res.json(newComment);
+    }
 }
 
 exports.update = (req, res) => {
-    Comment.findOneAndUpdate({_id: ObjectId(req.params.id)}, req.body, {projection: {'codigo': 1, 'comment': 1, 'author': 1}, new: true}, (err, result) => {
-        if (err) return console.log(err);
+    Comment.findOneAndUpdate({_id: ObjectId(req.params.id)}, req.body, {projection: {'codigo': 1, 'comment': 1, 'author': 1}, new: true, runValidators: true}, (err, result) => {
+        if (err){
+            const validationErrors = [];
+            if(err.errors.author != undefined) validationErrors.push(err.errors.author.message);
+            if(err.errors.comment != undefined) validationErrors.push(err.errors.comment.message);
+            
+            console.log(validationErrors);
+            res.status(400).json({errors: validationErrors});
+        }
         else if(result != null){
             console.log('updated comment in the database');
             res.json(result);
