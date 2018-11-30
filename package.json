@@ -1,5 +1,5 @@
 {
-  "name": "gossiper",
+  "name": "gossiper-server",
   "version": "1.0.0",
   "description": "A project for the Distributed Systems subject",
   "main": "index.js",
