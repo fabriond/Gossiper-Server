@@ -13,35 +13,37 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-database.connect((err) => {
+exports.init = function(){
     app.listen(port, () => {
         console.log("running on port: "+port);
     });
+}
 
-    app.get(routesPath, (req, res) => {
-        var output = [];
-        app._router.stack.forEach(element => {
-            if(element.route != undefined){
-                var method = element.route.stack[0].method;
-                var path = element.route.path;
-                if(path != routesPath) output.push({method: method, path: path});
-            }
-        });
-        res.json({"Please access a valid url": output/*app._router.stack*/});
+database.connect();
+
+app.get(routesPath, (req, res) => {
+    var output = [];
+    app._router.stack.forEach(element => {
+        if(element.route != undefined){
+            var method = element.route.stack[0].method;
+            var path = element.route.path;
+            if(path != routesPath) output.push({method: method, path: path});
+        }
     });
-
-    //index for comments of a document
-    app.get(commentsPath, commentsController.index);
-
-    //view a comment
-    app.get(commentsPath+"/:id", commentsController.show);
-
-    //create a comment
-    app.post(commentsPath, commentsController.create);
-
-    //update a comment
-    app.put(commentsPath+"/:id", commentsController.update);
-
-    //delete a comment
-    app.delete(commentsPath+"/:id", commentsController.delete);
+    res.json({"Please access a valid url": output});
 });
+
+//index for comments of a document
+app.get(commentsPath, commentsController.index);
+
+//view a comment
+app.get(commentsPath+"/:id", commentsController.show);
+
+//create a comment
+app.post(commentsPath, commentsController.create);
+
+//update a comment
+app.put(commentsPath+"/:id", commentsController.update);
+
+//delete a comment
+app.delete(commentsPath+"/:id", commentsController.delete);
