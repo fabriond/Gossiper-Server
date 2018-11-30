@@ -44,9 +44,10 @@ exports.create = (req, res) => {
     var newComment = new Comment(Object.assign({codigo: req.params.codigo}, req.body));
     
     //In case of invalid document code, we reject the request
-    if(newComment.codigo == undefined || newComment.comment == undefined){
+    if(newComment.codigo == undefined || newComment.comment == undefined || newComment.author == undefined){
         console.log('incorrect params');
         res.status(400).json({error: 'incorrect params'});
+        return;        
     }
     
     newComment.save((err, result) => {
@@ -60,8 +61,13 @@ exports.create = (req, res) => {
 exports.update = (req, res) => {
     Comment.findOneAndUpdate({_id: ObjectId(req.params.id)}, req.body, {projection: {'codigo': 1, 'comment': 1, 'author': 1}, new: true}, (err, result) => {
         if (err) return console.log(err);
-        console.log('updated comment in the database');
-        res.json(result);
+        else if(result != null){
+            console.log('updated comment in the database');
+            res.json(result);
+        } else{
+            console.log('comment not found');
+            res.status(404).json({error: 'comment not found'});
+        }
     });
 }
 
