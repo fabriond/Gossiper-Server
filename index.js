@@ -21,8 +21,6 @@ exports.init = function(){
 
 database.connect();
 
-app.get("/", commentsController.randomDocument);
-
 app.get(routesPath, (req, res) => {
     var output = [];
     app._router.stack.forEach(element => {

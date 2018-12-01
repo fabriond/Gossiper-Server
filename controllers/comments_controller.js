@@ -3,33 +3,6 @@ const http = require("http");
 const url_portal_transp = "http://www.transparencia.gov.br/api-de-dados";
 const Comment = require('../models/comment');
 
-exports.randomDocument = (req, res) => {
-    var orgao = Math.floor(Math.random()*100)%53 + 1;;
-    http.get(url_portal_transp+"/despesas/por-orgao?ano="+(new Date()).getFullYear()+"&orgao="+orgao+"000&pagina=1", (resp) => {
-        let data = '';
-        console.log("tried "+orgao+"000");
-        // A chunk of data has been received.
-        resp.on('data', (chunk) => {
-            data += chunk;
-        });
-    
-        // The whole response has been received. Print out the result.
-        resp.on('end', () => {
-            if(data == '[]'){
-                exports.randomDocument(req, res);
-            }
-            else{
-                console.log("success")
-                Comment.find({codigo: req.params.codigo}, 'author comment', function(err, results) {
-                    if (err) return console.log(err);
-                    var output = Object.assign(JSON.parse(data), {comments: results});
-                    res.json(output);
-                });
-            }
-        });
-    });
-}
-
 exports.index = (req, res) => {
     http.get(url_portal_transp+"/despesas/documentos/"+req.params.codigo, (resp) => {
         let data = '';
@@ -50,6 +23,7 @@ exports.index = (req, res) => {
                     if (err) return console.log(err);
                     var output = Object.assign(JSON.parse(data), {comments: results});
                     res.json(output);
+                    console.log('document found');
                 });
             }
         });
