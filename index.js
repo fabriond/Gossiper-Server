@@ -7,7 +7,7 @@ const commentsController = require("./controllers/comments_controller");
 
 const app = express();
 const commentsPath = "/:codigo/comments"
-const routesPath = "/";
+const routesPath = "/routes";
 const port = 3000;
 
 app.use(express.json());
@@ -20,6 +20,8 @@ exports.init = function(){
 }
 
 database.connect();
+
+app.get("/", commentsController.randomDocument);
 
 app.get(routesPath, (req, res) => {
     var output = [];
