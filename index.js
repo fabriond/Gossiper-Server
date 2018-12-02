@@ -8,7 +8,7 @@ const commentsController = require("./controllers/comments_controller");
 const app = express();
 const commentsPath = "/:codigo/comments"
 const routesPath = "/routes";
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
