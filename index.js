@@ -13,6 +13,18 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+app.use((req, res, next) => {
+    const allowedOrigins = ['http://localhost:8080', 'https://gossiper-frontend.herokuapp.com'];
+    const origin = req.headers.origin;
+    if(allowedOrigins.indexOf(origin) > -1){
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    next();
+});
+
 exports.init = function(){
     app.listen(port, () => {
         console.log("running on port: "+port);
