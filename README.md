@@ -1,7 +1,7 @@
 # Gossiper
 API to comment on public spending from [Portal da Transparência](http://www.portaltransparencia.gov.br/despesas/favorecido?ordenarPor=valor&direcao=desc)
 
-Check the documentation [here](https://documenter.getpostman.com/view/2558796/RzfmGSoh)
+Check out the documentation [here](https://documenter.getpostman.com/view/2558796/RzfmGSoh)
 
 ## How to run the project locally
 - Install [Node.js](https://nodejs.org/)
