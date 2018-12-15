@@ -22,7 +22,7 @@ exports.index = (req, res) => {
                 Comment.find({codigo: req.params.codigo}, 'author comment', function(err, results) {
                     if (err) return console.log(err);
                     var output = Object.assign(JSON.parse(data), {comments: results});
-                    res.json(output);
+                    res.status(200).json(output);
                     console.log('document found');
                 });
             }
@@ -33,7 +33,7 @@ exports.index = (req, res) => {
 exports.show = (req, res) => {
     Comment.findById(ObjectId(req.params.id), '-__v', function(err, doc) {
         if (err) return console.log(err);
-        else if(doc != null) res.json(doc);
+        else if(doc != null) res.status(200).json(doc);
         else{
             console.log('comment not found');
             res.status(404).json('comment not found');
@@ -59,7 +59,7 @@ exports.create = (req, res) => {
             console.log('saved comment to database');
         });
     
-        res.json(newComment);
+        res.status(201).json(newComment);
     }
 }
 
@@ -75,7 +75,7 @@ exports.update = (req, res) => {
         }
         else if(result != null){
             console.log('updated comment in the database');
-            res.json(result);
+            res.status(200).json(result);
         } else{
             console.log('comment not found');
             res.status(404).json({error: 'comment not found'});
@@ -88,7 +88,7 @@ exports.delete = (req, res) => {
         if (err) return console.log(err);
         else if(result != null){
             console.log('comment deleted from the database');
-            res.json(result);
+            res.status(200).json(result);
         } else{
             console.log('comment not found');
             res.status(404).json({error: 'comment not found'});
