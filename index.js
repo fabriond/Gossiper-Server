@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.use((req, res, next) => {
-    const allowedOrigins = ['http://localhost:8080', 'https://gossiper-frontend.herokuapp.com'];
+    const allowedOrigins = ['http://localhost:8080', 'https://gossiper-frontend.herokuapp.com', 'http://gossiper-frontend.herokuapp.com'];
     const origin = req.headers.origin;
     if(allowedOrigins.indexOf(origin) > -1){
         res.setHeader('Access-Control-Allow-Origin', origin);
